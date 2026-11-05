@@ -13,7 +13,7 @@ import { getStockHistory, getStockQuote } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import StockSearch from '../components/StockSearch';
-import PriceChart from '../components/PriceChart';
+import TradingViewChart from '../components/TradingViewChart';
 
 const PERIODS = [
   { value: '1d', label: '1D' },
@@ -48,8 +48,6 @@ const StockAnalysis = () => {
   const [quote, setQuote] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showSMA20, setShowSMA20] = useState(true);
-  const [showSMA50, setShowSMA50] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -182,42 +180,19 @@ const StockAnalysis = () => {
             </div>
           </div>
 
-          {/* Price Chart */}
-          <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">
-                {selectedSymbol} — {PERIODS.find((p) => p.value === period)?.label ?? period}
-              </h3>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showSMA20}
-                    onChange={(e) => setShowSMA20(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
-                  />
-                  <span className="text-sm text-emerald-400">SMA 20</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={showSMA50}
-                    onChange={(e) => setShowSMA50(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
-                  />
-                  <span className="text-sm text-blue-400">SMA 50</span>
-                </label>
-              </div>
-            </div>
-            {historyArray && historyArray.length > 0 ? (
-              <div className="h-[400px]">
-                <PriceChart data={historyArray} showSMA20={showSMA20} showSMA50={showSMA50} symbol={selectedSymbol} />
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-64 text-slate-500">
-                No chart data available
-              </div>
-            )}
+          {/* Price Chart (TradingView Interactive Candlestick Engine) */}
+          <div className="space-y-3">
+            <TradingViewChart
+              data={historyArray}
+              symbol={selectedSymbol}
+              stockName={stockName}
+              currentPrice={currentPrice}
+              percentChange={dayChangePercent}
+              period={period}
+              onPeriodChange={setPeriod}
+              showPeriodSelector={false}
+              height={500}
+            />
           </div>
 
           {/* OHLCV Data Table */}

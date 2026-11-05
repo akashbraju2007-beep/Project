@@ -29,3 +29,4 @@ echo  - API Swagger Docs:   http://localhost:8000/docs
 echo ====================================================================
 echo You can minimize this window. Close the opened windows to stop the servers.
 pause
+
